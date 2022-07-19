@@ -1,0 +1,19 @@
+{
+  "Switch":"switch",
+  "Account":"account",
+  "Switchuser":" switch account",
+  "stake":"pledge",
+  "confirm":"confirm",
+  "cancel":"cancel",
+  "amount":"amount",
+  "cycle":"cycle",
+  "day":"days",
+  "pool":" Prize Pool",
+  "Pooltotal":"Prize Pool Total Rewards",
+  "myStale":"my pledge",
+  "UnlockedValue":" unlocked",
+  "StaleValue":"total pledge",
+  "Unstake":"redemption",
+  "Canextractyield":" Withdrawable income",
+  "harvest":"extract"
+}

@@ -1,0 +1,19 @@
+{
+  "Switch":"切换",
+  "Account":"账号",
+  "Switchuser":"切换账号",
+  "stake":"质押",
+  "confirm":"确认",
+  "cancel":"取消",
+  "amount":"数量",
+  "cycle":"周期",
+  "day":"天",
+  "pool":"奖金池",
+  "Pooltotal":"奖金池总奖励",
+  "myStale":"我的质押",
+  "UnlockedValue":"已解锁",
+  "StaleValue":"总质押",
+  "Unstake":"赎回",
+  "Canextractyield":"可提取收益",
+  "harvest":"提取"
+}

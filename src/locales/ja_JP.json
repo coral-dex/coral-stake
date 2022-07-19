@@ -1,0 +1,21 @@
+{
+  "Switch":"トグル",
+  "Account":"アカウント",
+  "Switchuser":"アカウントを切り替える",
+  "stake":"誓約",
+  "confirm":"確認",
+  "cancel":"キャンセル",
+  "amount":"量",
+  "cycle":"サイクル",
+  "day":"空",
+  "pool":" 賞金プール ",
+  "Pooltotal":"   賞金プール合計報酬 ",
+  "myStale":"私の誓約",
+  "UnlockedValue":" ロック解除",
+  "StaleValue":"総誓約",
+  "Unstake":"償還",
+  "Canextractyield":"引き出し可能な収入",
+  "harvest":"エキス"
+}
+
+    

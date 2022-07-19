@@ -1,0 +1,139 @@
+@import '~antd/dist/antd.css';
+
+body,
+p,
+html {
+    margin: 0;
+    padding: 0;
+}
+
+.main {
+    margin: 20px 20px 0px 20px;
+
+    .account {
+        margin-bottom: 20px;
+
+        .account-content {
+            border: 1px solid #ccc;
+            padding: 10px 10px;
+            border-radius: 10px;
+
+
+            .item {
+                display: flex;
+
+                .content {
+                    flex: 3;
+                }
+
+                .switch {
+                    flex: 1;
+
+                    p {
+                        text-align: center;
+                    }
+                }
+
+            }
+
+
+        }
+    }
+
+    .pool {
+        margin-bottom: 20px;
+
+        .pool-content {
+            border: 1px solid #ccc;
+            padding: 10px 10px;
+            border-radius: 10px;
+
+            .pool-item {
+                font-size: 16px;
+                display: flex;
+
+                span:nth-child(1) {
+                    flex: 1;
+                    text-align: left;
+                }
+
+                span:nth-child(2) {
+                    flex: 1;
+                    text-align: right;
+                }
+            }
+        }
+    }
+
+    .funds {
+        margin-bottom: 20px;
+
+        .funds-content {
+            border: 1px solid #ccc;
+            padding: 10px 10px;
+            border-radius: 10px;
+
+            .funds-item {
+                display: flex;
+
+                .item-left {
+                    flex: 3;
+                }
+
+                .item-right {
+                    flex: 1;
+
+                    p {
+                        text-align: center;
+                    }
+                }
+
+            }
+        }
+    }
+
+
+    .title {
+        font-size: 16px;
+        padding-left: 5px;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+}
+
+
+.userboxs {
+    .ant-modal-body {
+        padding: 0px 24px;
+    }
+
+    .user-item {
+        display: flex;
+
+        span:nth-child(1) {
+            flex: 1;
+        }
+
+        span:nth-child(2) {
+            flex: 2;
+        }
+    }
+}
+
+.stake {
+    .stake-item {
+        width: 100%;
+        display: flex;
+        margin-bottom: 15px;
+
+        div:nth-child(1) {
+            line-height: 32px;
+        }
+
+        div:nth-child(2) {
+            flex: 2;
+            padding-left: 20px;
+        }
+    }
+}
