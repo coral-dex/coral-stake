@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 
 import service from '../api/service';
 import contract from '../api/contract';
-import { Alert, Button, Col, Input, InputNumber, List, Modal, Row, Select, Spin, Statistic } from 'antd';
+import { Button, Input, List, Modal, Select, Spin, Statistic } from 'antd';
 import BigNumber from 'bignumber.js'
 import { verify } from '../utils';
-import { LoadingOutlined, CheckCircleOutlined, CopyOutlined } from '@ant-design/icons';
+import { LoadingOutlined, CheckCircleOutlined } from '@ant-design/icons';
 import i18n from '../i18n';
 
 const { Option } = Select;
@@ -35,8 +35,8 @@ export default function Coralstake() {
   const [loadDescription, setDescription] = useState<string>('');
   const [loadIndicator, setLoadIndicator] = useState<any>(antIcon);
 
+  const [totalAmount, setTotalAmount] = useState<string>('0');
   useEffect(() => {
-    console.log("init", service, contract)
     gatdata();
   }, [])
 
@@ -53,12 +53,9 @@ export default function Coralstake() {
           return item.Name === sessionStorage.getItem("userName");
         })
       }
-      console.log("userobj", userobj);
-
+      // console.log("userobj", userobj);
       setAccountList(res);
-      setCurrentAccount(userobj);
       init(userobj);
-
     })
   }
 
@@ -66,14 +63,30 @@ export default function Coralstake() {
     getStakeValue(account);
     getPoolValue(account);
     getrewardValue(account);
-    getCoralAmount(account)
+    getCoralAmount(account);
+    setCurrentAccount(account);
+    getTotal();
+  }
+
+
+  const getTotal = () => {
+    contract.balanceOf().then((res) => {
+      if (res.tkn && res.tkn.CORAL) {
+        setTotalAmount(fromValue(res.tkn.CORAL, 18))
+      } else {
+        setTotalAmount("0.00")
+      }
+
+    }).catch((err: any) => {
+      console.log("balanceOf err=", err)
+      setTotalAmount("0.00")
+    })
   }
 
   const getCoralAmount = (account: any) => {
-    console.log(account.Balance.get("CORAL"), "getCoralAmount", new BigNumber(account.Balance.get("CORAL")).dividedBy(10 ** 18).toFixed(2));
+    // console.log(account.Balance.get("CORAL"), "getCoralAmount", new BigNumber(account.Balance.get("CORAL")).dividedBy(10 ** 18).toFixed(2));
     if (account.Balance.get("CORAL")) {
       setCoralAmount(fromValue(account.Balance.get("CORAL"), 18))
-      console.log(1)
     } else {
       setCoralAmount("0.00")
     }
@@ -347,8 +360,15 @@ export default function Coralstake() {
           <p className='pool-item'>
             <span style={{
               lineHeight: '37px'
+            }}>{i18n.t("totalStake")}</span>
+            <Statistic value={totalAmount} precision={2} suffix="CORAL" />
+          </p>
+
+          <p className='pool-item'>
+            <span style={{
+              lineHeight: '37px'
             }}>{i18n.t("Pooltotal")}</span>
-            <Statistic value={poolValue} precision={2} suffix="CORAL" />
+            <Statistic value={poolValue} precision={2} suffix="SERO" />
           </p>
         </div>
       </div>

@@ -9,6 +9,7 @@ import be_BY from './locales/be_BY.json';
 import {initReactI18next} from 'react-i18next';
 
 let lang = localStorage.getItem("language");
+console.log("lang=",lang)
 if (!lang) {
     lang = 'zh_CN';
     localStorage.setItem("language", 'zh_CN');

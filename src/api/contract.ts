@@ -63,6 +63,19 @@ class Contract {
     }
 
 
+    async balanceOf(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            service.rpc("sero_getBalance", [config.address, "latest"]).then(data => {
+                if (data != "0x") {
+                    resolve(data)
+                } else {
+                }
+            }).catch(err => {
+                reject(err)
+            })
+        })
+    }
+
     async call(method: string, args: Array<any>, from: string, cy?: string, value?: string): Promise<any> {
         const packData: any = this.contract.packData(method, args, true)
         const contract = this.contract;
