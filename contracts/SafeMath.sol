@@ -1,6 +1,6 @@
 pragma solidity ^0.6.10;
 // SPDX-License-Identifier: GPL-3.0 pragma solidity >=0.4.16 <0.7.0;
-pragma experimental ABIEncoderV2;
+
 
 library SafeMath {
 
@@ -34,12 +34,6 @@ library SafeMath {
         require(c >= a);
 
         return c;
-    }
-    
-     function pow(uint x, uint y) internal pure returns(uint z) {
-        assembly {
-            z:= exp(x, y)
-        }
     }
 }
 

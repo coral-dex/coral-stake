@@ -49,16 +49,18 @@ contract CoralStake is SeroInterface{
     using ValueList for ValueList.List;
     using PoolValues for PoolValues.List;
     
-    string constant STAKE_TOKEN = "TOKEN_0";
+    string constant STAKE_TOKEN = "CORAL";
     string constant SERO_TOKEN = "SERO";
-    
-    mapping(uint256 => uint256) public weights;
     
     ValueList.List wholePledge;
     mapping(address => ValueList.List) pledgesMap;
     
     mapping(address => StakeValues.List) stakesMap;
     PoolValues.List poolValues;
+    
+    int256 public base = PRBMathSD59x18.div(
+                    PRBMathSD59x18.fromInt(99),
+                    PRBMathSD59x18.fromInt(100));
     
     
     function stakeValue() public view returns(uint value, uint unlockedValue, uint pledgeValue, uint total) {
@@ -74,25 +76,28 @@ contract CoralStake is SeroInterface{
             return 0;
         }
         
-        return poolValues.valueAfterNDay(len - 1, now / TimeUitls.DAY - poolValues.list[len-1].index);
+        return poolValues.valueAfterNDay(base, len - 1, now / TimeUitls.DAY - poolValues.list[len-1].index);
     }
     
     function rewardValue() public view returns(uint) {
         return _caleReward(msg.sender);
     }
     
-    function recharge(uint value) public {
-        // require(Strings._stringEq(SERO_TOKEN, sero_msg_currency()));
-        poolValues.add(value);
+    function recharge() public payable {
+        require(Strings._stringEq(SERO_TOKEN, sero_msg_currency()));
+        require(msg.value > 0);
+        poolValues.add(base, msg.value);
     }
     
-    function stake(uint value, uint daysLimit) public {
-        // require(Strings._stringEq(STAKE_TOKEN, sero_msg_currency()));
+    function stake(uint daysLimit) public payable {
+        require(Strings._stringEq(STAKE_TOKEN, sero_msg_currency()));
         uint weight = 1;
-        
-        wholePledge.add(value * weight);
-        pledgesMap[msg.sender].add(value * weight);
-        stakesMap[msg.sender].addValue(value, value * weight, now + daysLimit * TimeUitls.DAY);
+        uint value = msg.value;
+        if(value > 0) {
+            wholePledge.add(value * weight);
+            pledgesMap[msg.sender].add(value * weight);
+            stakesMap[msg.sender].addValue(value, value * weight, now + daysLimit * TimeUitls.DAY);
+        }
     }
     
     function unstake(address to) public {
@@ -100,8 +105,7 @@ contract CoralStake is SeroInterface{
         if(value > 0) {
             wholePledge.sub(weightedValue);
             pledgesMap[msg.sender].sub(weightedValue);
-        
-            // require(sero_send_token(to, STAKE_TOKEN, value), "send_token error");
+            require(sero_send_token(to, STAKE_TOKEN, value), "send_token error");
         }
     }
     
@@ -109,7 +113,9 @@ contract CoralStake is SeroInterface{
         value = _caleReward(msg.sender);
         pledgesMap[msg.sender].clear();
         
-        // require(sero_send_token(to, SERO_TOKEN, value), "send_token error");
+        if(value > 0) {
+            require(sero_send_token(to, SERO_TOKEN, value), "send_token error");
+        }
     }
     
     function _caleReward(address pledger) internal view returns(uint amount) {
@@ -136,13 +142,16 @@ contract CoralStake is SeroInterface{
             
             while(selfIndex <= wholeIndex) {
                 if(selfValue.nextValue != 0) {
-                    amount += poolValues.rewardValue(wholeIndex + 1, endIndex) * 
+                    amount += poolValues.rewardValue(base, wholeIndex + 1, endIndex) * 
                                 selfValue.nextValue / wholePledge.list[wholeIndex].nextValue;
                 }
-                
-                if(selfValue.value != 0) {
-                     amount += poolValues.rewardValue(wholeIndex, wholeIndex + 1) * 
+
+                if(selfIndex == wholeIndex) {
+                    amount += poolValues.rewardValue(base, wholeIndex, wholeIndex + 1) * 
                                 selfValue.value / wholePledge.list[wholeIndex].value;
+                } else {
+                    amount += poolValues.rewardValue(base, wholeIndex, wholeIndex + 1) * 
+                                selfValue.nextValue / wholePledge.list[wholeIndex].value;
                 }
                 
                 endIndex = wholeIndex;
@@ -150,16 +159,14 @@ contract CoralStake is SeroInterface{
             }
             
             if(selfIndex < endIndex) {
-                if(selfValue.value != 0) {
-                    amount += poolValues.rewardValue(selfIndex, selfIndex + 1) * 
-                                selfValue.value / wholePledge.list[wholeIndex].nextValue;
-                }
-                
                 if(selfValue.nextValue != 0) {
-                    amount += poolValues.rewardValue(selfIndex + 1, endIndex) * 
+                    amount += poolValues.rewardValue(base, selfIndex + 1, endIndex) * 
                                 selfValue.nextValue / wholePledge.list[wholeIndex].nextValue;
                 }
                 
+                amount += poolValues.rewardValue(base, selfIndex, selfIndex + 1) * 
+                            selfValue.value / wholePledge.list[wholeIndex].nextValue;
+
                 endIndex = selfIndex;
             }
             

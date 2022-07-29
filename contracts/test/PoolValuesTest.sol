@@ -9,18 +9,22 @@ contract PoolValuesTest  {
     using PoolValues for PoolValues.List;
     using PoolValues for PoolValues.Item;
 
+    int256 public base = PRBMathSD59x18.div(
+                    PRBMathSD59x18.fromInt(99),
+                    PRBMathSD59x18.fromInt(100));
+    
     PoolValues.List list;
 
     function update(uint value) public {
-        list.add(value);
+        list.add(base, value);
     } 
 
     function valueAferNDays(uint index, uint n) public view returns(uint) {
-        return list.valueAfterNDay(index, n);
+        return list.valueAfterNDay(base, index, n);
     }
 
     function rewardValue(uint startIndex, uint endIndex) public view returns(uint) {
-        return list.rewardValue(startIndex, endIndex);
+        return list.rewardValue(base, startIndex, endIndex);
     }
     
     function all() public view returns(PoolValues.Item[] memory) {

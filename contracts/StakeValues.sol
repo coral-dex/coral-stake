@@ -35,7 +35,7 @@ library StakeValues {
             self.lastIndex = index;
             self.values[index].prveIndex = currentIndex;
         } else {
-            while(index < currentIndex) {
+            while(index <= self.values[currentIndex].prveIndex) {
                 currentIndex = self.values[currentIndex].prveIndex;
             }
             
@@ -73,7 +73,6 @@ library StakeValues {
     
     function stakeValue(List storage self) internal view returns(uint value) {
         uint currentIndex = self.lastIndex;
-        uint index = now / TimeUitls.DAY;
         
         while(currentIndex > 0) {
             Value[] storage list = self.values[currentIndex].list;
@@ -112,6 +111,8 @@ library StakeValues {
         currentIndex = self.lastIndex;
         while(currentIndex > 0) {
             rets[--count] = self.values[currentIndex];
+            rets[count].prveIndex = currentIndex;
+            
             currentIndex = self.values[currentIndex].prveIndex;
         }
     }
